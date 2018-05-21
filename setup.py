@@ -4,14 +4,18 @@ REQUIREMENTS = [
     'pathspec',
 ]
 
+def readme():
+    with open('readme.md') as f:
+        return f.read()
+
 setup(
     name='ftpbackup',
     version='0.1.0',
     description = 'Backup the folder to FTP!',
-    long_description='',
+    long_description = readme(),
     author = 'mickey9910326',
     author_email = 'mickey9910326@gmail.com',
-    url='https://pypi.org/py_ASA_loader',
+    url='https://github.com/mickey9910326/ftpbackup',
     license = 'MIT',
     packages=find_packages(),
     zip_safe=False,
