@@ -9,7 +9,7 @@ import ftplib
 
 from . import json_cleaner
 
-__VERSION__ = "0.1.5"
+__VERSION__ = "0.1.6"
 
 __DEFAULT_CONF__ = """{
     "protocol": "ftp", // string - Only 'ftp' now.
