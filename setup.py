@@ -1,3 +1,4 @@
+from ftpbackup import __VERSION__
 from setuptools import setup, find_packages
 
 REQUIREMENTS = [
@@ -5,12 +6,12 @@ REQUIREMENTS = [
 ]
 
 def readme():
-    with open('readme.md') as f:
+    with open('README.rst') as f:
         return f.read()
 
 setup(
     name='ftpbackup',
-    version='0.1.0',
+    version= __VERSION__,
     description = 'Backup the folder to FTP!',
     long_description = readme(),
     author = 'mickey9910326',

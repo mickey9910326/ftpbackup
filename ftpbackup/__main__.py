@@ -41,10 +41,11 @@ def subBackup(args):
 
 def argHandle():
     parser = argparse.ArgumentParser(description='Backup to FTP.')
-    subparsers = parser.add_subparsers(title='subcommands',
-                                        description='valid subcommands',
-                                        help='additional help',
-                                        dest='subparser_name')
+    subparsers = parser.add_subparsers(
+        title = 'commands',
+        dest  = 'subparser_name'
+    )
+    subparsers.required = True
 
     parser_genconf = subparsers.add_parser(
         'genconf',

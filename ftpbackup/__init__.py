@@ -9,12 +9,12 @@ import ftplib
 
 from . import json_cleaner
 
-__VERSION__ = "0.1.0"
+__VERSION__ = "0.1.5"
 
 __DEFAULT_CONF__ = """{
     "protocol": "ftp",
     "host": "localhost", // string - The hostname or IP address of the FTP server. Default: 'localhost'
-    "encoding": "big5",
+    "encoding": "utf-8",
     "port": 21, // integer - The port of the FTP server. Default: 21
     "user": "anonymous", // string - Username for authentication. Default: 'anonymous'
     "pass": "anonymous@", // string - Password for authentication. Default: 'anonymous@'
