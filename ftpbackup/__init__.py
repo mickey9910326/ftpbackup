@@ -14,10 +14,10 @@ __VERSION__ = "0.1.0"
 __DEFAULT_CONF__ = """{
     "protocol": "ftp",
     "host": "localhost", // string - The hostname or IP address of the FTP server. Default: 'localhost'
+    "encoding": "big5",
     "port": 21, // integer - The port of the FTP server. Default: 21
     "user": "anonymous", // string - Username for authentication. Default: 'anonymous'
     "pass": "anonymous@", // string - Password for authentication. Default: 'anonymous@'
-    "encoding": "big5",
     "remote": ".",
     "local": ".",
     "useGitIgnore": true,
@@ -27,7 +27,7 @@ __DEFAULT_CONF__ = """{
 }
 """
 
-class Config(dict):
+class Config():
     def __init__(self, file = None):
         if file is None:
             pass
@@ -123,3 +123,70 @@ class Config(dict):
             self.ftpIgnoreEncoding = 'utf-8'
         else:
             self.ftpIgnoreEncoding = confDist['ftpIgnoreEncoding']
+
+class FtpBackup():
+    def __init__(self, conf):
+        self._conf = conf
+        self._connectFtp()
+        self._loadIgnoreFiles()
+
+    def _connectFtp(self):
+        self._ftp = ftplib.FTP()
+        self._ftp.encoding = self._conf.encoding
+        self._ftp.connect(self._conf.host, self._conf.port)
+        self._ftp.login(self._conf.user, self._conf.passwd)
+
+    def _loadIgnoreFiles(self):
+        text = str()
+        if self._conf.useGitIgnore:
+            file = '.gitignore'
+            encode = self._conf.gitIgnoreEncoding
+            if not os.path.exists(file):
+                print('Can\'t find ignore file "'+file+'".')
+            else:
+                with open(file, encoding=encode) as fh:
+                    text = text + '\n' + fh.read()
+        if self._conf.useFtpIgnore:
+            file = '.ftpignore'
+            encode = self._conf.ftpIgnoreEncoding
+            if not os.path.exists(file):
+                print('Can\'t find ignore file "'+file+'".')
+            else:
+                with open(file, encoding=encode) as fh:
+                    text = text + '\n' + fh.read()
+        self._spec = pathspec.PathSpec.from_lines(pathspec.GitIgnorePattern, text.splitlines())
+
+    def startBackup(self):
+        rootdir = self._conf.local
+        remote = self._conf.remote
+        list_dirs = os.walk(rootdir)
+        for root, dirs, files in list_dirs:
+            if not isMatchSpec(root+'\\', self._spec):
+                # print('root = ' + root)
+                # print('remote = ' + (remote + root[1:len(root)].replace('\\', '/')))
+                remotedir = remote + root[1:len(root)].replace('\\', '/')
+                self._ftp.cwd(remotedir)
+                print('enter dir: "' + remotedir + '"')
+                for dir in dirs:
+                    if not isMatchSpec(dir+'\\', self._spec):
+                        # print('  - dir = ' + dir)
+                        print('try to make dir "' + dir + '"... ', end='')
+                        try:
+                            self._ftp.mkd(dir)
+                        except UnicodeDecodeError as e:
+                            pass
+                        except ftplib.error_perm :
+                            pass
+                        print('Complete!')
+                for file in files:
+                    # print('  - file = ' + file)
+                    print('upload file "' + os.path.join(root, file) + '"... ', end='')
+                    with open(os.path.join(root, file), 'rb') as fp:
+                        self._ftp.storbinary('STOR '+file, fp, blocksize=8192, callback=None, rest=None)
+                    print('Complete!')
+
+def isMatchSpec(s ,spec):
+    if len(set(spec.match_files([s]))) is 0:
+        return False
+    else:
+        return True
