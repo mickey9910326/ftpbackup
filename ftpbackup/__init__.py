@@ -160,6 +160,14 @@ class FtpBackup():
         rootdir = self._conf.local
         remote = self._conf.remote
         list_dirs = os.walk(rootdir)
+        print('try to make dir "' + remote + '"... ', end='')
+        try:
+            self._ftp.mkd(remote)
+        except UnicodeDecodeError as e:
+            pass
+        except ftplib.error_perm :
+            pass
+        print('Complete!')
         for root, dirs, files in list_dirs:
             if not isMatchSpec(root+'\\', self._spec):
                 # print('root = ' + root)
