@@ -53,7 +53,8 @@ The default config is like below. ::
         "port": 21, // integer - The port of the FTP server. Default: 21
         "user": "anonymous", // string - Username for authentication. Default: 'anonymous'
         "pass": "anonymous@", // string - Password for authentication. Default: 'anonymous@'
-        "remote": ".", // string - The path on FTP to upload files.
+        "remote": "/", // string - The path on FTP to upload files.
+        // NOTE : Use absolute path of remote or get a error.
         "local": ".", // string - The folder on local to be uploaded.
         "useGitIgnore": true, // bool - Use .gitignore in ignored file list.
         "gitIgnoreEncoding": "utf-8", // string - The encoding of .gitignore

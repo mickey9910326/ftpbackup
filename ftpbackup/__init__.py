@@ -12,18 +12,19 @@ from . import json_cleaner
 __VERSION__ = "0.1.5"
 
 __DEFAULT_CONF__ = """{
-    "protocol": "ftp",
+    "protocol": "ftp", // string - Only 'ftp' now.
     "host": "localhost", // string - The hostname or IP address of the FTP server. Default: 'localhost'
-    "encoding": "utf-8",
+    "encoding": "utf-8", // string - The encoding of the FTP server. Default: utf-8
     "port": 21, // integer - The port of the FTP server. Default: 21
     "user": "anonymous", // string - Username for authentication. Default: 'anonymous'
     "pass": "anonymous@", // string - Password for authentication. Default: 'anonymous@'
-    "remote": ".",
-    "local": ".",
-    "useGitIgnore": true,
-    "gitIgnoreEncoding": "utf-8",
-    "useFtpIgnore": true,
-    "ftpIgnoreEncoding": "utf-8"
+    "remote": "/", // string - The path on FTP to upload files.
+    // NOTE : Use absolute path of remote or get a error.
+    "local": ".", // string - The folder on local to be uploaded.
+    "useGitIgnore": true, // bool - Use .gitignore in ignored file list.
+    "gitIgnoreEncoding": "utf-8", // string - The encoding of .gitignore
+    "useFtpIgnore": true, // bool - Use .ftpignore in ignored file list.
+    "ftpIgnoreEncoding": "utf-8" // string - The encoding of .ftpignore
 }
 """
 
